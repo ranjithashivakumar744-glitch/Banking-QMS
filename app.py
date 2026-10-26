@@ -234,7 +234,7 @@ def documents():
 @app.route("/process")
 def process():
     return render_template("process.html", objectives=QUALITY_OBJECTIVES, factors=QUALITY_FACTORS, checks=RELEASE_CHECKS)
-
+    
+init_db()
 if __name__ == "__main__":
-    init_db()
     app.run(debug=True)

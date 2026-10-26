@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div><p class="eyebrow">TEAM 3 · BANKING & FINANCIAL SOFTWARE</p><h1>Software Quality Management System</h1>
+  <p>Manage quality from planning and requirement approval through verification, measurement, reporting, and continuous improvement.</p></div>
+  <div class="hero-flow"><span>PLAN</span><i>→</i><span>DEFINE</span><i>→</i><span>EXECUTE</span><i>→</i><span>VERIFY</span><i>→</i><span>MEASURE</span><i>→</i><span>REPORT</span><i>→</i><span>IMPROVE</span></div>
+</section>
+<section class="metrics">
+  <div class="metric"><span>Total test runs</span><strong>{{ total_tests }}</strong><small>Recorded executions</small></div>
+  <div class="metric"><span>Test pass rate</span><strong>{{ pass_rate }}%</strong><small>{{ passed }} passed · {{ failed }} failed</small></div>
+  <div class="metric"><span>Open critical defects</span><strong class="{% if open_critical %}danger-text{% endif %}">{{ open_critical }}</strong><small>Must be zero for release</small></div>
+  <div class="metric"><span>Requirements awaiting approval</span><strong>{{ pending_reviews }}</strong><small>Approval gate</small></div>
+</section>
+<section class="release-banner {% if release_ready %}ready{% else %}blocked{% endif %}">
+  <div><span class="eyebrow">RELEASE CONTROL</span><h2>{% if release_ready %}Release gate: preliminary checks passed{% else %}Release gate: NOT READY{% endif %}</h2>
+  <p>{% if release_ready %}Dashboard rules currently show no open critical defects, all recorded tests passing, and all requirements approved.{% else %}Resolve critical defects, obtain required approvals, and pass all recorded tests before considering release. High-severity defects require documented risk acceptance and authorized approval if not fixed.{% endif %}</p></div>
+  <a class="button button-dark" href="{{ url_for('process') }}">View release checklist</a>
+</section>
+<div class="section-heading"><div><p class="eyebrow">QUALITY FRAMEWORK</p><h2>Quality objectives</h2></div></div>
+<section class="cards two-col">
+  {% for name, desc in objectives %}
+  <article class="card objective"><span class="number">{{ "%02d"|format(loop.index) }}</span><div><h3>{{ name }}</h3><p>{{ desc }}</p></div></article>
+  {% endfor %}
+</section>
+<div class="section-heading"><div><p class="eyebrow">QUALITY FACTORS</p><h2>What the QMS controls</h2></div></div>
+<section class="cards three-col">
+  {% for name, desc in factors %}
+  <article class="card"><h3>{{ name }}</h3><p>{{ desc }}</p></article>
+  {% endfor %}
+</section>
+<div class="section-heading"><div><p class="eyebrow">CURRENT REGISTER</p><h2>Recent defects</h2></div><a class="text-link" href="{{ url_for('defects') }}">Manage defects →</a></div>
+<div class="table-wrap"><table><thead><tr><th>ID</th><th>Defect</th><th>Category</th><th>Severity</th><th>Status</th><th>Owner</th></tr></thead><tbody>
+{% for d in defects[:5] %}<tr><td>BUG-{{ "%03d"|format(d.id) }}</td><td>{{ d.title }}</td><td>{{ d.category }}</td><td><span class="pill {{ d.severity|lower }}">{{ d.severity }}</span></td><td>{{ d.status }}</td><td>{{ d.owner }}</td></tr>{% else %}<tr><td colspan="6">No defects recorded.</td></tr>{% endfor %}
+</tbody></table></div>
+{% endblock %}

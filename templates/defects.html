@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-title"><p class="eyebrow">VERIFY · CORRECT · PREVENT</p><h1>Defect & Non-Conformance Register</h1><p>Classify defects by business impact, not just by how easy they are to fix.</p></div>
+<section class="card form-card"><h2>Record a defect</h2><form method="post" class="form-grid">
+<label>Defect title<input name="title" required placeholder="e.g. Duplicate fund transfer possible"></label>
+<label>Category<select name="category" required><option>Business rule</option><option>Transaction integrity</option><option>Security / privacy</option><option>Data integrity</option><option>Performance</option><option>Usability / functional</option><option>Compliance / audit</option><option>Documentation / configuration</option></select></label>
+<label>Severity<select name="severity" required><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></label>
+<label>Found in<select name="found_in" required><option>Requirements Review</option><option>Design Review</option><option>Code Review</option><option>Unit Testing</option><option>Integration Testing</option><option>System Testing</option><option>UAT</option><option>Production Monitoring</option></select></label>
+<label>Owner<input name="owner" required placeholder="Responsible team / person"></label>
+<label class="full">Description and impact<textarea name="description" rows="3" required placeholder="Include steps to reproduce, expected vs actual result, affected transactions, and evidence."></textarea></label>
+<div class="full"><button class="button" type="submit">Record defect</button></div>
+</form></section>
+<div class="section-heading"><div><h2>Defect register</h2><p>Critical defects block release. High defects require resolution or formal risk acceptance.</p></div></div>
+{% for d in rows %}
+<section class="card defect-card">
+  <div class="defect-head"><div><span class="muted">BUG-{{ "%03d"|format(d.id) }} · {{ d.category }}</span><h3>{{ d.title }}</h3></div><div class="pill-group"><span class="pill {{ d.severity|lower }}">{{ d.severity }}</span><span class="pill neutral">{{ d.status }}</span></div></div>
+  <p>{{ d.description }}</p><div class="defect-meta"><span><strong>Found in:</strong> {{ d.found_in }}</span><span><strong>Owner:</strong> {{ d.owner }}</span><span><strong>Logged:</strong> {{ d.created_at }}</span></div>
+  <form method="post" action="{{ url_for('update_defect', item_id=d.id) }}" class="form-grid action-form">
+    <label>Status<select name="status">{% for s in ['Open','In Progress','Fixed - Awaiting Retest','Closed','Accepted Risk'] %}<option {% if d.status==s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></label>
+    <label>Corrective action<textarea name="corrective_action" rows="2" placeholder="Fix the current defect; identify owner and retest evidence.">{{ d.corrective_action }}</textarea></label>
+    <label>Preventive action<textarea name="preventive_action" rows="2" placeholder="Prevent recurrence: checklist, training, automated test, process change.">{{ d.preventive_action }}</textarea></label>
+    <div class="full"><button class="button small" type="submit">Save action plan</button></div>
+  </form>
+</section>
+{% else %}<p>No defects recorded.</p>{% endfor %}
+<div class="note danger-note"><strong>Banking severity guide:</strong> Critical = potential unauthorized transfer, incorrect balances, material financial loss, or major data exposure; High = major feature/business-rule failure or significant security/control weakness; Medium = limited impact with workaround; Low = cosmetic or minor inconvenience. Final severity should follow the organization's approved policy.</div>
+{% endblock %}

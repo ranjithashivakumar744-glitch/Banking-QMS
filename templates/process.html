@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-title"><p class="eyebrow">QMS OPERATING MODEL</p><h1>PLAN → DEFINE → EXECUTE → VERIFY → MEASURE → REPORT → IMPROVE</h1><p>The QMS manages the quality of building and maintaining the banking application. It is not the banking application itself.</p></div>
+<section class="process-list">
+{% set steps = [
+('01','PLAN','Set quality objectives, scope, responsibilities, risk levels, review gates, test strategy, and release criteria.','Quality plan; risk register; responsibility matrix.'),
+('02','DEFINE','Baseline requirements and acceptance criteria. Identify financial rules, security controls, regulatory obligations, and traceability links.','Approved requirements; business-rule catalogue; review checklist.'),
+('03','EXECUTE','Perform peer reviews, static analysis, unit/integration/system tests, security tests, and defect handling.','Review records; test runs; defect records; evidence.'),
+('04','VERIFY','Confirm fixes by retesting and regression testing. Check traceability, reconciliation, security, and release checklist completion.','Verification evidence; UAT sign-off; release gate decision.'),
+('05','MEASURE','Track pass rate, requirement approval, escaped defects, defect age/severity, test coverage, and re-open rate.','Quality dashboard; trend data; threshold alerts.'),
+('06','REPORT','Present quality status, unresolved risks, release readiness, exceptions, and ownership to management.','Quality status report; risk acceptance; go/no-go record.'),
+('07','IMPROVE','Perform root-cause analysis and update checklists, training, automated tests, standards, and review practices.','Corrective/preventive actions; lessons learned; updated procedures.')
+] %}
+{% for n, name, desc, outputs in steps %}
+<article class="process-step"><div class="step-num">{{ n }}</div><div class="step-body"><h2>{{ name }}</h2><p>{{ desc }}</p><small><strong>Outputs:</strong> {{ outputs }}</small></div></article>
+{% endfor %}
+</section>
+<div class="section-heading"><div><p class="eyebrow">PRE-RELEASE GATE</p><h2>Mandatory verification checklist</h2></div></div>
+<section class="card checklist">
+{% for title, desc in checks %}<div class="check-row"><span class="check-icon">✓</span><div><strong>{{ title }}</strong><p>{{ desc }}</p></div></div>{% endfor %}
+</section>
+<div class="section-heading"><div><p class="eyebrow">METRICS & GOVERNANCE</p><h2>Recommended measures</h2></div></div>
+<div class="table-wrap"><table><thead><tr><th>Metric</th><th>Formula / interpretation</th><th>Why it matters</th></tr></thead><tbody>
+<tr><td>Test pass rate</td><td>Passed tests ÷ executed tests × 100</td><td>Shows current test outcome; report blocked tests separately.</td></tr>
+<tr><td>Critical open defects</td><td>Count of Critical defects not closed</td><td>Release blocker; target is zero.</td></tr>
+<tr><td>Requirements approval rate</td><td>Approved in-scope requirements ÷ total in-scope requirements × 100</td><td>Reveals ambiguity and approval gaps before coding.</td></tr>
+<tr><td>Defect leakage</td><td>Defects found after release ÷ all defects found across the measured lifecycle × 100</td><td>Indicates whether earlier reviews and tests are effective.</td></tr>
+<tr><td>Defect resolution time</td><td>Average time from logging to verified closure</td><td>Highlights delays, especially for Critical/High defects.</td></tr>
+<tr><td>Requirements-to-test traceability</td><td>Requirements linked to test cases ÷ total requirements × 100</td><td>Helps prove each important business rule was verified.</td></tr>
+<tr><td>Reopen rate</td><td>Reopened defects ÷ defects marked fixed × 100</td><td>Signals weak fixes or inadequate retesting.</td></tr>
+</tbody></table></div>
+<div class="note danger-note"><strong>Unresolved high-severity defects:</strong> document customer/financial impact, likelihood, affected transactions, compensating controls, responsible owner, target date, and residual risk. Obtain written acceptance from authorized business, risk, and security stakeholders as applicable. Critical financial-integrity or severe security defects should block release; an informal verbal approval is not sufficient.</div>
+{% endblock %}

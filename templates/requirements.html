@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-title"><p class="eyebrow">DEFINE · REVIEW · APPROVE</p><h1>Requirements Review Register</h1><p>Financial, security, and regulatory requirements require explicit review, traceability, and authorized approval.</p></div>
+<section class="card form-card"><h2>Add requirement</h2><form method="post" class="form-grid">
+<label>Requirement title<input name="title" required placeholder="e.g. Daily transfer limit validation"></label>
+<label>Category<select name="category" required><option>Financial business rule</option><option>Security</option><option>Regulatory / audit</option><option>Performance</option><option>Usability</option><option>Reliability</option></select></label>
+<label>Risk level<select name="risk" required><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></label>
+<label>Owner<input name="owner" required placeholder="Business Analyst / Product Owner"></label>
+<label class="full">Requirement and acceptance criteria<textarea name="description" required rows="3" placeholder="State the rule, expected outcome, limits, rounding, exceptions, and acceptance criteria."></textarea></label>
+<div class="full"><button class="button" type="submit">Add for review</button></div>
+</form></section>
+<div class="section-heading"><div><h2>Requirement register</h2><p>Approval is not complete without a named approver.</p></div></div>
+<div class="table-wrap"><table><thead><tr><th>ID / Requirement</th><th>Risk</th><th>Description</th><th>Owner</th><th>Status / Review</th></tr></thead><tbody>
+{% for r in rows %}<tr><td><strong>REQ-{{ "%03d"|format(r.id) }}</strong><br>{{ r.title }}<br><span class="muted">{{ r.category }}</span></td><td><span class="pill {{ r.risk|lower }}">{{ r.risk }}</span></td><td>{{ r.description }}</td><td>{{ r.owner }}</td><td>
+<form method="post" action="{{ url_for('review_requirement', item_id=r.id) }}" class="inline-form">
+<select name="status"><option {% if r.status=='Pending Review' %}selected{% endif %}>Pending Review</option><option {% if r.status=='In Review' %}selected{% endif %}>In Review</option><option {% if r.status=='Approved' %}selected{% endif %}>Approved</option><option {% if r.status=='Rejected' %}selected{% endif %}>Rejected</option></select>
+<input name="approver" placeholder="Approver" value="{{ r.approver }}">
+<input name="review_notes" placeholder="Review notes" value="{{ r.review_notes }}">
+<button class="button small" type="submit">Save review</button>
+</form></td></tr>{% else %}<tr><td colspan="5">No requirements.</td></tr>{% endfor %}
+</tbody></table></div>
+<div class="note"><strong>Review checklist:</strong> unambiguous wording; valid/invalid examples; limits and boundary values; rounding and currency rules; authorization; audit trail; error handling; traceability to test cases; approval by the accountable business owner.</div>
+{% endblock %}

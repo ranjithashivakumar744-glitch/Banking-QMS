@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Banking QMS | Software Quality Management System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">Q</span><div><strong>Banking QMS</strong><small>Software Quality Management System</small></div></div>
+  <nav>
+    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('requirements') }}">Requirements</a>
+    <a href="{{ url_for('defects') }}">Defects</a>
+    <a href="{{ url_for('tests') }}">Test Results</a>
+    <a href="{{ url_for('documents') }}">Documents</a>
+    <a href="{{ url_for('process') }}">QMS Process</a>
+  </nav>
+</header>
+<main class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}{% for category, message in messages %}
+      <div class="flash {{ category }}">{{ message }}</div>
+    {% endfor %}{% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+  <footer>Academic prototype • Demonstration data only • Not for real banking transactions</footer>
+</main>
+</body>
+</html>

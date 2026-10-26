@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-title"><p class="eyebrow">EXECUTE · VERIFY · MEASURE</p><h1>Test Execution Results</h1><p>Record test outcomes and evidence for critical financial workflows, including negative and boundary cases.</p></div>
+<section class="card form-card"><h2>Record test run</h2><form method="post" class="form-grid">
+<label>Test case<input name="test_name" required placeholder="e.g. Reject transfer exceeding balance"></label>
+<label>Functional area<select name="area" required><option>Funds Transfer</option><option>Customer Accounts</option><option>Transaction History</option><option>Loan Processing</option><option>Security</option><option>Audit & Reconciliation</option><option>Performance</option></select></label>
+<label>Result<select name="result" required><option>Pass</option><option>Fail</option><option>Blocked</option></select></label>
+<label>Evidence / test ID<input name="evidence" placeholder="e.g. TEST-TR-012, screenshot or log reference"></label>
+<div class="full"><button class="button" type="submit">Save test result</button></div>
+</form></section>
+<div class="section-heading"><div><h2>Test run history</h2><p>Use stable test IDs and link failures to defect IDs.</p></div></div>
+<div class="table-wrap"><table><thead><tr><th>Test ID</th><th>Test case</th><th>Area</th><th>Result</th><th>Evidence</th><th>Date</th></tr></thead><tbody>
+{% for t in rows %}<tr><td>TC-{{ "%03d"|format(t.id) }}</td><td>{{ t.test_name }}</td><td>{{ t.area }}</td><td><span class="pill {{ t.result|lower }}">{{ t.result }}</span></td><td>{{ t.evidence or '—' }}</td><td>{{ t.run_date }}</td></tr>{% else %}<tr><td colspan="6">No test runs.</td></tr>{% endfor %}
+</tbody></table></div>
+<div class="note"><strong>Suggested verification points:</strong> unit tests for calculations; integration tests for ledger and payment services; regression tests for corrected defects; security tests for authorization; boundary tests for transfer limits and rounding; reconciliation tests for balance consistency; UAT sign-off; backup/rollback rehearsal.</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-title"><p class="eyebrow">CONFIGURATION & DOCUMENT CONTROL</p><h1>Controlled Document Register</h1><p>Keep the approved version, owner, review status, and change notes traceable. This prototype records metadata; it does not store uploaded document files.</p></div>
+<section class="card form-card"><h2>Register document or configuration item</h2><form method="post" class="form-grid">
+<label>Document / item name<input name="name" required placeholder="e.g. Funds transfer specification"></label>
+<label>Type<select name="doc_type" required><option>Requirements</option><option>Design</option><option>Test Plan</option><option>Test Evidence</option><option>Procedure</option><option>Configuration</option><option>Release Note</option><option>Risk Acceptance</option></select></label>
+<label>Version<input name="version" required placeholder="v1.0"></label>
+<label>Owner<input name="owner" required placeholder="Document owner"></label>
+<label>Status<select name="status" required><option>Draft</option><option>In Review</option><option>Approved</option><option>Obsolete</option></select></label>
+<label>Change notes<input name="notes" placeholder="Reason for change / approval reference"></label>
+<div class="full"><button class="button" type="submit">Add register entry</button></div>
+</form></section>
+<div class="section-heading"><div><h2>Controlled items</h2></div></div>
+<div class="table-wrap"><table><thead><tr><th>Item</th><th>Type</th><th>Version</th><th>Owner</th><th>Status</th><th>Notes</th><th>Updated</th></tr></thead><tbody>
+{% for d in rows %}<tr><td>{{ d.name }}</td><td>{{ d.doc_type }}</td><td>{{ d.version }}</td><td>{{ d.owner }}</td><td><span class="pill {{ d.status|lower|replace(' ','-') }}">{{ d.status }}</span></td><td>{{ d.notes }}</td><td>{{ d.updated_at }}</td></tr>{% else %}<tr><td colspan="7">No documents registered.</td></tr>{% endfor %}
+</tbody></table></div>
+<div class="note"><strong>Control procedure:</strong> assign a unique ID and owner; use version history; review and approve changes; assess impact on code, tests, data, and user documentation; restrict edits to authorized roles; retain prior approved baselines; mark superseded copies obsolete; link release artifacts to the exact version.</div>
+{% endblock %}
